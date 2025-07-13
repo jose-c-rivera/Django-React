@@ -1,3 +1,5 @@
 from django.contrib import admin
+from library.models.console import Console, ConsoleVariation 
 
-# Register your models here.
+admin.site.register(Console)
+admin.site.register(ConsoleVariation)
