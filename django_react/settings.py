@@ -111,6 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:3000']  # or wherever React runs
+CSRF_COOKIE_HTTPONLY = False  # So React can read it
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
