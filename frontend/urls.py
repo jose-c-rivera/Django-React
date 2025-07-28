@@ -1,6 +1,7 @@
-from django.urls import path
+from django.urls import re_path
 from . import views
 
 urlpatterns = [
-    path('', views.index),
+    # Catch all paths and serve React index.html
+    re_path(r'^.*$', views.index),
 ]

@@ -64,3 +64,14 @@ class SignupView(generics.CreateAPIView):
             {"message": "User created successfully", "username": user.username},
             status=status.HTTP_201_CREATED,
         )
+
+
+@login_required
+def current_user(request):
+    user = request.user
+    return JsonResponse({
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+    })
