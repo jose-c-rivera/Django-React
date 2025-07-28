@@ -36,6 +36,12 @@ REST_FRAMEWORK = {
 }
 """
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'leads.apps.LeadsConfig', # activate the new app
+    'corsheaders',
     'auth_app',
     'library',
     'rest_framework',
@@ -53,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,6 +69,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React frontend origin
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Allow session cookies to be sent
+
 
 ROOT_URLCONF = 'django_react.urls'
 

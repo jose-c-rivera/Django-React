@@ -1,30 +1,38 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-function Login({ onLogin, onShowSignup }) {
+function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    const response = await fetch("/auth/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
-      credentials: "include", // Include Django session cookie
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const response = await fetch("/auth/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCSRFToken(),
+        },
+        credentials: "include", // Include Django session cookie
+        body: JSON.stringify({ username, password }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      onLogin(data.username);
-    } else {
-      setError(data.error || "Login failed");
+      if (response.ok) {
+        onLogin(data.username);
+        navigate("/home");  // Redirect to home on success
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Network error");
     }
   };
 
@@ -54,9 +62,9 @@ function Login({ onLogin, onShowSignup }) {
         required
       /><br />
       <button type="submit">Login</button>
-      <button type="button" onClick={onShowSignup}>
-        Don't have an account? Sign up
-      </button>
+      <p>
+        Don't have an account? <Link to="/signup">Sign up</Link>
+      </p>
     </form>
   );
 }
