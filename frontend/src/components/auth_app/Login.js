@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -44,28 +45,51 @@ function Login({ onLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        required
-      /><br />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      /><br />
-      <button type="submit">Login</button>
-      <p>
-        Don't have an account? <Link to="/signup">Sign up</Link>
-      </p>
-    </form>
+    <Grid
+      container
+      style={{ minHeight: '100vh' }} // full viewport height
+      justifyContent="center"        // horizontal centering
+      alignItems="center"            // vertical centering
+    >
+      <Grid item xs={10} sm={6} md={4} component={Paper} elevation={3} style={{ padding: 24 }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <TextField
+            type="text"
+            value={username}
+            label="Username"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            required
+          /><br />
+          <TextField
+            type="password"
+            value={password}
+            label="Password"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          /><br />
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Login</Button>
+          <p>
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
+        </form>
+        </Grid>
+    </Grid>
   );
 }
 

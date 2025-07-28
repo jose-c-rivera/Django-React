@@ -5,6 +5,9 @@ import{
   Route,
   Navigate,
 } from "react-router-dom";
+import MainLayout from '../layouts/MainLayout';
+import AuthLayout from '../layouts/AuthLayout';
+
 import Login from "./auth_app/Login";
 import Home from "./auth_app/Home";
 import Signup from "./auth_app/Signup";
@@ -42,15 +45,24 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Auth routes without nav */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login onLogin={setUser} />} />
+          <Route path="/signup" element={<Signup onSignup={setUser} />} />
+        </Route>
+
+        {/* Main app routes with nav */}
+        <Route element={<MainLayout />}>
+          <Route
+            path="/home"
+            element={user ? <Home onLogout={() => setUser(null)} /> : <Navigate to="/login" />}
+          />
+          {/* add more protected routes here */}
+        </Route>
+
         <Route
           path="/"
           element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
-        />
-        <Route path="/login" element={<Login onLogin={setUser} />} />
-        <Route path="/signup" element={<Signup onSignup={setUser} />} />
-        <Route
-          path="/home"
-          element={user ? <Home onLogout={() => setUser(null)} /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
