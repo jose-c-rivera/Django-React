@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
-import { Grid, Paper, Typography, TextField, Button, Divider } from '@mui/material';
+import { Grid, Paper, Typography, TextField, Button, Divider, useMediaQuery, Alert } from '@mui/material';
 
 function Login({ onLogin }) {
+  const isDesktop = useMediaQuery('(min-width:900px)');
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -45,22 +47,29 @@ function Login({ onLogin }) {
   };
 
   return (
-    <Grid
-      container
-      style={{ minHeight: '100vh' }} // full viewport height
-      justifyContent="center"        // horizontal centering
-      alignItems="center"            // vertical centering
-    >
-      <Grid size={{ xs:10, sm:8, md:6 }}>
-        <Paper elevation={3} style={{ padding: 24 }}>
-          <Grid container spacing={2} alignItems="center">
+    <Grid container sx={{ minHeight: '100vh' }} justifyContent="center" alignItems="center">
+      <Grid sx={{ width: { xs: '100%', sm: '66.6667%', md: '50%' } }}>
+        <Paper
+          elevation={3}
+          sx={{
+            p: 3,
+            width: '100%',
+            boxSizing: 'border-box',
+            mx: { xs: 2, sm: 0 },
+          }}
+        >
+          <Grid container columns={12} spacing={2} alignItems="center">
             {/* Username/Password Login */}
-            <Grid size={{ xs:12, md:6 }}>
+            <Grid sx={{ gridColumn: { xs: 'span 12', md: 'span 6' } }}>
               <Typography variant="h5" align="center" gutterBottom>
                 Login
               </Typography>
-              <form onSubmit={handleSubmit}>
-                {error && <p style={{ color: "red" }}>{error}</p>}
+              <form onSubmit={handleSubmit} aria-label="login form">
+                {error && (
+                  <Alert severity="error" sx={{ mb: 2 }} role="alert">
+                    {error}
+                  </Alert>
+                )}
                 <TextField
                   type="text"
                   value={username}
@@ -72,7 +81,8 @@ function Login({ onLogin }) {
                   margin="normal"
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                /><br />
+                  sx={{ mb: 2 }}
+                />
                 <TextField
                   type="password"
                   value={password}
@@ -84,23 +94,28 @@ function Login({ onLogin }) {
                   margin="normal"
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                /><br />
-                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Login</Button>
+                  sx={{ mb: 2 }}
+                />
+                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 1, mb: 2 }}>Login</Button>
                 <p>
                   Don't have an account? <Link to="/signup">Sign up</Link>
                 </p>
               </form>
             </Grid>
 
-            {/* Vertical Divider */}
+            {/* Responsive Divider: vertical on desktop, horizontal on mobile/tablet */}
             <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ display: { xs: "none", md: "block" }, mx: 2 }}
+              orientation={isDesktop ? "vertical" : "horizontal"}
+              flexItem={isDesktop ? true : undefined}
+              sx={
+                isDesktop
+                  ? { display: { xs: "none", md: "block" }, mx: 2 }
+                  : { display: { xs: "block", md: "none" }, my: 2, width: '100%' }
+              }
             />
 
             {/* Social Logins */}
-            <Grid size={{ xs:12, md:5 }} textAlign="center">
+            <Grid sx={{ gridColumn: { xs: 'span 12', md: 'span 5' }, textAlign: 'center' }}>
               <Typography variant="h6">Other ways to sign in</Typography>
             </Grid>
           </Grid>
@@ -108,6 +123,11 @@ function Login({ onLogin }) {
       </Grid>
     </Grid>
   );
+
 }
+
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};
 
 export default Login;
