@@ -66,8 +66,10 @@ class SignupView(generics.CreateAPIView):
         )
 
 
-@login_required
 def current_user(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Not authenticated"}, status=401)
+    
     user = request.user
     return JsonResponse({
         "username": user.username,

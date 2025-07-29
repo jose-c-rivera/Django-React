@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
+import { Grid, Paper, Typography, TextField, Button, Divider } from '@mui/material';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -51,44 +51,61 @@ function Login({ onLogin }) {
       justifyContent="center"        // horizontal centering
       alignItems="center"            // vertical centering
     >
-      <Grid item xs={10} sm={6} md={4} component={Paper} elevation={3} style={{ padding: 24 }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Login
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <TextField
-            type="text"
-            value={username}
-            label="Username"
-            variant="outlined"
-            color="primary"
-            size="small"
-            fullWidth
-            margin="normal"
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            required
-          /><br />
-          <TextField
-            type="password"
-            value={password}
-            label="Password"
-            variant="outlined"
-            color="primary"
-            size="small"
-            fullWidth
-            margin="normal"
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          /><br />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Login</Button>
-          <p>
-            Don't have an account? <Link to="/signup">Sign up</Link>
-          </p>
-        </form>
-        </Grid>
+      <Grid size={{ xs:10, sm:8, md:6 }}>
+        <Paper elevation={3} style={{ padding: 24 }}>
+          <Grid container spacing={2} alignItems="center">
+            {/* Username/Password Login */}
+            <Grid size={{ xs:12, md:6 }}>
+              <Typography variant="h5" align="center" gutterBottom>
+                Login
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                <TextField
+                  type="text"
+                  value={username}
+                  label="Username"
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                /><br />
+                <TextField
+                  type="password"
+                  value={password}
+                  label="Password"
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                /><br />
+                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Login</Button>
+                <p>
+                  Don't have an account? <Link to="/signup">Sign up</Link>
+                </p>
+              </form>
+            </Grid>
+
+            {/* Vertical Divider */}
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ display: { xs: "none", md: "block" }, mx: 2 }}
+            />
+
+            {/* Social Logins */}
+            <Grid size={{ xs:12, md:5 }} textAlign="center">
+              <Typography variant="h6">Other ways to sign in</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
     </Grid>
   );
 }

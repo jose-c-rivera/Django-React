@@ -126,6 +126,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Prevent Django from redirecting unauthenticated API requests
+LOGIN_URL = "/auth/login/" 
+
+
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:3000']  # or wherever React runs
 CSRF_COOKIE_HTTPONLY = False  # So React can read it
 
