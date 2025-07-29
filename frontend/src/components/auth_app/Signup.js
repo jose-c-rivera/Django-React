@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 
 export default function Signup({ onSignup }) {
   const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ export default function Signup({ onSignup }) {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -59,75 +63,142 @@ export default function Signup({ onSignup }) {
       
       if (response.ok) {
         const data = await response.json();
-        setMessage("Signup successful! You can now log in.");
-        setFormData({
-          username: "",
-          email: "",
-          first_name: "",
-          last_name: "",
-          password: "",
-          password2: ""
+        setMessage("Signup successful! Logging you in...");
+
+        // Try to log in automatically
+        const loginResponse = await fetch("/auth/login/", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+          }),
         });
-        onSignup(data.username); 
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+          setFormData({
+            username: "",
+            email: "",
+            first_name: "",
+            last_name: "",
+            password: "",
+            password2: "",
+          });
+          onSignup(loginData.username);
+          navigate("/home");
+        } else {
+          setError("Signup succeeded but automatic login failed. Please log in manually.");
+        }
       } else {
         const data = await response.json();
         setError(formatErrors(data));
       }
     } catch (err) {
+      console.error("Signup error:", err);
       setError("Network error");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Sign Up</h2>
-      {message && <p style={{color: "green"}}>{message}</p>}
-      {error && <p style={{color: "red"}}>{error}</p>}
+    <Grid
+      container
+      style={{ minHeight: '100vh' }} // full viewport height
+      justifyContent="center"        // horizontal centering
+      alignItems="center"            // vertical centering
+    >
+      <Grid size={{ xs:10, sm:6, md:4 }} component={Paper} elevation={3} style={{ padding: 24 }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Sign Up
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          {message && <p style={{color: "green"}}>{message}</p>}
+          {error && <p style={{color: "red"}}>{error}</p>}
 
-      <input
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-        placeholder="Username"
-        required
-      />
-      <input
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Email"
-      />
-      <input
-        name="first_name"
-        value={formData.first_name}
-        onChange={handleChange}
-        placeholder="First Name"
-      />
-      <input
-        name="last_name"
-        value={formData.last_name}
-        onChange={handleChange}
-        placeholder="Last Name"
-      />
-      <input
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-        placeholder="Password"
-        required
-      />
-      <input
-        name="password2"
-        type="password"
-        value={formData.password2}
-        onChange={handleChange}
-        placeholder="Confirm Password"
-        required
-      />
+          <TextField
+            name="username"
+            value={formData.username}
+            label="Username"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            name="email"
+            type="email"
+            label="E-mail"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            name="first_name"
+            value={formData.first_name}
+            label="First Name"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
+          />
+          <TextField
+            name="last_name"
+            value={formData.last_name}
+            label="Last Name"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
+          />
+          <TextField
+            name="password"
+            type="password"
+            value={formData.password}
+            label="Password"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            name="password2"
+            type="password"
+            value={formData.password2}
+            label="Confirm Password"
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
+            required
+          />
 
-      <button type="submit">Sign Up</button>
-    </form>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>Sign Up</Button>
+
+          <p>
+            Already have an account? <Link to="/login">Sign in.</Link>
+          </p>
+        </form>
+      </Grid>
+    </Grid>
   );
 }

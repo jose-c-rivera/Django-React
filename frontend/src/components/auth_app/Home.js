@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button } from '@mui/material';
 
 function Home({ onLogout }) {
   const [message, setMessage] = useState("");
@@ -23,7 +24,10 @@ function Home({ onLogout }) {
     <div>
       <h2>Home</h2>
       <p>{message}</p>
-      <button onClick={handleLogout}>Logout</button>
+      <Button onClick={handleLogout}
+        variant="contained"
+        color="error">Logout
+      </Button>
     </div>
   );
 }
