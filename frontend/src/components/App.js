@@ -52,7 +52,7 @@ function App() {
         </Route>
 
         {/* Main app routes with nav */}
-        <Route element={<MainLayout />}>
+        <Route element={<MainLayout user={user} setUser={setUser} />}>
           <Route
             path="/home"
             element={user ? <Home onLogout={() => setUser(null)} /> : <Navigate to="/login" />}
