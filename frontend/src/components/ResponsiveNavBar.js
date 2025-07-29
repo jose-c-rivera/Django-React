@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { navItems } from './navConfig';
 import {
   AppBar, Toolbar, IconButton, Typography,
@@ -13,6 +14,14 @@ import { useTheme } from '@mui/material/styles';
 
 
 function DesktopNav({ navItems }) {
+DesktopNav.propTypes = {
+  navItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
   return navItems
     .filter(item => item.label !== 'Logout' && item.label !== 'Profile')
     .map((item) => (
@@ -29,6 +38,12 @@ function DesktopNav({ navItems }) {
 }
 
 function ProfileMenu({ anchorEl, menuOpen, handleProfileMenuClose, handleLogout }) {
+ProfileMenu.propTypes = {
+  anchorEl: PropTypes.any,
+  menuOpen: PropTypes.bool.isRequired,
+  handleProfileMenuClose: PropTypes.func.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+};
   return (
     <Menu
       anchorEl={anchorEl}
@@ -64,6 +79,17 @@ function ProfileMenu({ anchorEl, menuOpen, handleProfileMenuClose, handleLogout 
 }
 
 function MobileDrawer({ navItems, drawerOpen, toggleDrawer, handleLogout }) {
+MobileDrawer.propTypes = {
+  navItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  drawerOpen: PropTypes.bool.isRequired,
+  toggleDrawer: PropTypes.func.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+};
   return (
     <Drawer
       variant="temporary"
@@ -113,6 +139,9 @@ function MobileDrawer({ navItems, drawerOpen, toggleDrawer, handleLogout }) {
 }
 
 function ResponsiveNavBar({ onLogout }) {
+ResponsiveNavBar.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+};
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const [drawerOpen, setDrawerOpen] = useState(false);
